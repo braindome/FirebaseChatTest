@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1024960169060",
+    "project_id": "firestorechattest-d99ba",
+    "storage_bucket": "firestorechattest-d99ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024960169060:android:3511b3a8b18b2abde20b71",
+        "android_client_info": {
+          "package_name": "com.example.firestorechattest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024960169060-mr2huivrodc8tb7aefbgguce3bfmce7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAG4l7VjxUpCAMMXlwDQez9F91m_oWjpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024960169060-mr2huivrodc8tb7aefbgguce3bfmce7n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
