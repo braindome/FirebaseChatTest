@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             if (snapshot != null) {
                 for (document in snapshot.documents) {
                     val item = document.toObject<User>()
-                    if (item != null) {
+                    if (item != null && item.uid != auth.currentUser!!.uid) {
                         userList.add(item)
                     }
                 }
