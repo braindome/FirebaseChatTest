@@ -2,6 +2,7 @@ package com.example.firestorechattest
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -18,7 +19,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var signupPassword : EditText
     private lateinit var signupName : EditText
     private lateinit var buttonSignup : Button
-    private lateinit var mAuth : FirebaseAuth
+    private lateinit var auth : FirebaseAuth
     private lateinit var db : FirebaseFirestore
     private lateinit var usersRef : CollectionReference
 
@@ -27,7 +28,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
 
-        mAuth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         db = Firebase.firestore
         usersRef = db.collection("Users")
         signupEmail = findViewById(R.id.emailTextSignup)
@@ -50,10 +51,11 @@ class SignUpActivity : AppCompatActivity() {
             return
         }
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    addUserToDatabase(name, email, mAuth.currentUser?.uid!!)
+                    addUserToDatabase(name, email, auth.currentUser?.uid!!)
+                    Log.d("createdUid", "User created with uid: ${auth.currentUser!!.uid}")
                     val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                     finish()
                     startActivity(intent)

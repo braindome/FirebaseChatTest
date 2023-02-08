@@ -41,12 +41,17 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
+        // FIXME: current user in contact list. Probably here?
         usersRef.addSnapshotListener() { snapshot, e ->
             if (snapshot != null) {
+                userList.clear()
                 for (document in snapshot.documents) {
                     val item = document.toObject<User>()
-                    if (item != null && item.uid != auth.currentUser!!.uid) {
-                        userList.add(item)
+                    Log.d("uidTest", "Logged in user id: ${auth.currentUser?.uid}; Item uid: ${item?.uid}")
+                    if (auth.currentUser?.uid != item?.uid) {
+                        if (item != null) {
+                            userList.add(item)
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged()
