@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         // FIXME: current user in contact list. Probably here?
         // FIXED
-        
+
         usersRef.addSnapshotListener() { snapshot, e ->
             if (snapshot != null) {
                 userList.clear()
