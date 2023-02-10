@@ -16,6 +16,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var buttonSignup : Button
     private lateinit var mAuth : FirebaseAuth
 
+    // Lenovo github test
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
