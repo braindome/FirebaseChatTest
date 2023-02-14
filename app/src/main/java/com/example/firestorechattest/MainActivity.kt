@@ -41,8 +41,6 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
-        // FIXME: current user in contact list. Probably here?
-        // FIXED
 
         usersRef.addSnapshotListener() { snapshot, e ->
             if (snapshot != null) {
