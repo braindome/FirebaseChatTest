@@ -1,12 +1,14 @@
 package com.example.firestorechattest
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MessageAdapter(val context : Context, val messageList : ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -36,6 +38,17 @@ class MessageAdapter(val context : Context, val messageList : ArrayList<Message>
         if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
             return ITEM_SENT
         } else {
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("users").document(currentMessage.senderId!!)
+            userRef.get().addOnSuccessListener { document ->
+                if (document != null) {
+                    val senderName = document.getString("name")
+                    currentMessage.senderName = senderName // set the sender name on the message object
+                    notifyDataSetChanged() // notify the adapter that the data has changed
+                }
+            }.addOnFailureListener { exception ->
+                Log.d("senderName", "Error getting sender name: ", exception)
+            }
             return ITEM_RECEIVED
         }
     }
@@ -53,6 +66,7 @@ class MessageAdapter(val context : Context, val messageList : ArrayList<Message>
             // do stuff for received view holder
             val viewHolder = holder as ReceivedViewHolder
             holder.receivedMessage.text = currentMessage.message
+            holder.senderName.text = currentMessage.senderName
         }
     }
 
@@ -62,6 +76,7 @@ class MessageAdapter(val context : Context, val messageList : ArrayList<Message>
 
     inner class ReceivedViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val receivedMessage = itemView.findViewById<TextView>(R.id.txt_received_message)
+        val senderName = itemView.findViewById<TextView>(R.id.senderNameText)
     }
 
 }
