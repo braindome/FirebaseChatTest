@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         usersRef.addSnapshotListener() { snapshot, e ->
             if (snapshot != null) {
                 userList.clear()
