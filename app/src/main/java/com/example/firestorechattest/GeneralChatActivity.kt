@@ -35,7 +35,6 @@ class GeneralChatActivity : AppCompatActivity() {
 
         val name = intent.getStringExtra("name")
         val receiverUid = intent.getStringExtra("uid")
-
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
 
         db = Firebase.firestore
@@ -85,10 +84,7 @@ class GeneralChatActivity : AppCompatActivity() {
                     Log.d("msg", "Error adding document", e)
                 }
 
-
-
             messageBox.setText("")
-
 
         }
     }
