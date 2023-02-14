@@ -21,8 +21,6 @@ class GeneralChatActivity : AppCompatActivity() {
     private lateinit var sendButton : ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
-    private lateinit var userList : ArrayList<User>
-    private lateinit var uidList : ArrayList<String>
     private lateinit var uidRef : CollectionReference
     private lateinit var db : FirebaseFirestore
     private lateinit var messagesRef : CollectionReference
@@ -56,6 +54,7 @@ class GeneralChatActivity : AppCompatActivity() {
         chatRecyclerView.adapter = messageAdapter
 
         messagesRef.document(generalRoom).collection("Messages")
+            .orderBy("timestamp")
             .addSnapshotListener { snapshot, e ->
                 messageList.clear()
                 if (snapshot != null) {
@@ -66,21 +65,6 @@ class GeneralChatActivity : AppCompatActivity() {
                     messageAdapter.notifyDataSetChanged()
                 }
             }
-
-
-        // adding data to recycler view
-
-/*        messagesRef.document(senderRoom!!).collection("Messages")
-            .addSnapshotListener() { snapshot, e ->
-                messageList.clear()
-                if (snapshot != null) {
-                    for (document in snapshot.documents) {
-                        val item = document.toObject<Message>()
-                        messageList.add(item!!)
-                    }
-                    messageAdapter.notifyDataSetChanged()
-                }
-            }*/
 
 
         // adding the message to database
@@ -101,16 +85,7 @@ class GeneralChatActivity : AppCompatActivity() {
                     Log.d("msg", "Error adding document", e)
                 }
 
-            messagesRef.document("dummychat").collection("Messages")
-                .add(messageObject)
-                .addOnSuccessListener { documentReference ->
-                    messagesRef.document("dummychat").collection("Messages")
-                        .add(messageObject)
-                    Log.d("msg", "General Chat - DocumentSnapshot written with ID: ${documentReference.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.d("msg", "General Chat - Error adding document", e)
-                }
+
 
             messageBox.setText("")
 
