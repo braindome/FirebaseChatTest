@@ -38,17 +38,6 @@ class MessageAdapter(val context : Context, val messageList : ArrayList<Message>
         if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
             return ITEM_SENT
         } else {
-            val db = FirebaseFirestore.getInstance()
-            val userRef = db.collection("users").document(currentMessage.senderId!!)
-            userRef.get().addOnSuccessListener { document ->
-                if (document != null) {
-                    val senderName = document.getString("name")
-                    currentMessage.senderName = senderName // set the sender name on the message object
-                    notifyDataSetChanged() // notify the adapter that the data has changed
-                }
-            }.addOnFailureListener { exception ->
-                Log.d("senderName", "Error getting sender name: ", exception)
-            }
             return ITEM_RECEIVED
         }
     }

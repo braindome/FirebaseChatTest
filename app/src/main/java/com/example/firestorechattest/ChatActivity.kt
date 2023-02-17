@@ -1,11 +1,10 @@
 package com.example.firestorechattest
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -24,9 +23,11 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList: ArrayList<Message>
     private lateinit var db : FirebaseFirestore
     private lateinit var messagesRef : CollectionReference
+    private lateinit var usersRef : CollectionReference
 
     var receiverRoom : String? = null
     var senderRoom : String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +35,11 @@ class ChatActivity : AppCompatActivity() {
 
         val name = intent.getStringExtra("name")
         val receiverUid = intent.getStringExtra("uid")
-
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
 
         db = Firebase.firestore
         messagesRef = db.collection("Chats")
+        usersRef = db.collection("Users")
 
         senderRoom = receiverUid + senderUid
         receiverRoom = senderUid + receiverUid
@@ -71,23 +72,33 @@ class ChatActivity : AppCompatActivity() {
 
         // adding the message to database
         sendButton.setOnClickListener {
-
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
 
-            messagesRef.document("$senderRoom").collection("Messages")
-                .add(messageObject)
-                .addOnSuccessListener { documentReference ->
-                    messagesRef.document("$receiverRoom").collection("Messages")
-                        .add(messageObject)
-                    Log.d("msg", "DocumentSnapshot written with ID: ${documentReference.id}")
+            usersRef.whereEqualTo("uid", senderUid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        Log.d("nameQuery", "${document.id} => ${document.data}")
+                        val senderName = document.toObject<User>().name.toString()
+                        val messageObject = Message(message, senderUid, senderName)
+
+                        messagesRef.document(senderRoom!!).collection("Messages")
+                            .add(messageObject)
+                            .addOnSuccessListener { documentReference ->
+                                messagesRef.document(receiverRoom!!).collection("Messages")
+                                    .add(messageObject)
+                                Log.d("msg", "DocumentSnapshot written with ID: ${documentReference.id}")
+                                Log.d("msg", "Sender name is: $senderName")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.d("msg", "Error adding document", e)
+                            }
+                        messageBox.setText("")
+                    }
                 }
-                .addOnFailureListener { e ->
-                    Log.d("msg", "Error adding document", e)
+                .addOnFailureListener {exception ->
+                    Log.w("nameQuery", "Error getting documents: ", exception)
                 }
-            messageBox.setText("")
-
-
         }
     }
 }
